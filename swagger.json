@@ -1,0 +1,121 @@
+swagger: "2.0"
+info:
+  description: "This is the swagger file for https://www.friends-app.fr/api REST api backend"
+  version: "1.0.0"
+  title: "Swagger Friends"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "contact@friends-app.fr"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "www.friends-app.fr"
+basePath: "/api"
+schemes:
+- "https"
+paths:
+  /register:
+    post:
+      tags:
+      - "Auth"
+      summary: "Register and authenticate user"
+      description: "This can be done by everyone."
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "query"
+          name: "name"
+          type: "string"
+          description: "The name of the user"
+        - in: "query"
+          name: "email"
+          type: "string"
+          description: "The email address of the user"
+        - in: "query"
+          name: "password"
+          type: "string"
+          description: "The password of the user"
+      responses:
+        201:
+          description: "successful creation"
+          schema:
+            $ref: "#/definitions/UserResp"
+        422:
+          description: "unsuccessful operation"
+          schema:
+            $ref: "#/definitions/UserRespErr"
+  /login:
+    post:
+      tags:
+      - "Auth"
+      summary: "Authenticate user"
+      description: "This can be done by everyone."
+      operationId: "AuthenticateUser"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "query"
+          name: "email"
+          type: "string"
+          description: "The email address of the user"
+        - in: "query"
+          name: "password"
+          type: "string"
+          description: "The password of the user"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserResp"
+        422:
+          description: "unsuccessful operation"
+          schema:
+            $ref: "#/definitions/UserRespErr"
+  /logout:
+    post:
+      tags:
+      - "Auth"
+      summary: "Invalidate user's token"
+      description: "This can only be done by authenticated users."
+      operationId: "InvalidateUserToken"
+      produces:
+      - "application/json"
+      parameters:
+        - in: "header"
+          name: "Authorization"
+          type: "string"
+          description: "User's token. Should be: 'Bearer $token' Where $token is the login response token field"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserResp"
+        403:
+          description: "Unhautorized operation"
+          schema:
+            $ref: "#/definitions/UserRespErr"
+definitions:
+  UserResp:
+    type: "object"
+    properties:
+      user:
+        type: "object"
+        properties:
+          id:
+            type: "integer"
+          name:
+            type: "string"
+          email:
+            type: "string"
+      token:
+        type: "string"
+  UserRespErr:
+    type: "object"
+    properties:
+      error:
+        type: "integer"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
+  
